@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benim Dijital Dünyam - Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #09090b; --card: #18181b; --accent: #2dd4bf; --text: #fafafa; --dim: #a1a1aa; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; padding: 20px; overflow-x: hidden; }
+        
+        .container { max-width: 1400px; margin: auto; display: grid; grid-template-columns: 350px 1fr 300px; gap: 25px; }
+
+        header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #27272a; margin-bottom: 10px; }
+        #clock { font-size: 2.2rem; font-weight: 700; color: var(--accent); }
+        .search-form { flex-grow: 1; max-width: 400px; }
+        input[type="text"] { width: 100%; padding: 10px 15px; border-radius: 10px; border: 1px solid #27272a; background: var(--card); color: white; outline: none; }
+
+        .sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .card { background: var(--card); border: 1px solid #27272a; border-radius: 20px; padding: 20px; position: relative; }
+        
+        /* Pomodoro */
+        .pomo-container { text-align: center; padding: 10px 0; position: relative; }
+        .timer-circle { position: relative; width: 180px; height: 180px; margin: 0 auto 20px; }
+        .timer-circle svg { transform: rotate(-90deg); width: 180px; height: 180px; }
+        .timer-circle circle { fill: none; stroke-width: 8; stroke-linecap: round; }
+        .bg-circle { stroke: #27272a; }
+        .progress-circle { stroke: var(--accent); stroke-dasharray: 534; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear; }
+        #timer-display { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2.5rem; font-weight: 700; }
+        
+        /* MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 24px;
+            border: 1px solid #3f3f46;
+            text-align: center;
+            width: 280px;
+        }
+        .modal-content input {
+            width: 120px; padding: 15px; border-radius: 12px; border: 1px solid #3f3f46;
+            background: #09090b; color: var(--accent); text-align: center; font-size: 1.8rem; font-weight: 700; margin: 20px 0;
+            outline: none;
+        }
+
+        .btn { border: none; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-weight: 600; transition: 0.3s; font-size: 0.85rem; }
+        .btn-primary { background: var(--accent); color: #000; }
+        .btn-secondary { background: #27272a; color: white; }
+
+        .settings-btn { 
+            position: absolute; top: -5px; right: -5px; 
+            background: #27272a; border: 1px solid #3f3f46; color: var(--text); 
+            cursor: pointer; padding: 8px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        main { border: 1px dashed #27272a; border-radius: 20px; min-height: 600px; display: flex; align-items: center; justify-content: center; color: var(--dim); }
+        .right-column { display: flex; flex-direction: column; gap: 20px; }
+        .weather-card { background: var(--card); padding: 20px; border-radius: 20px; text-align: center; border: 1px solid #27272a; }
+        .note-card { background: var(--card); border: 1px solid #27272a; border-radius: 20px; padding: 20px; flex-grow: 1; }
+        textarea { width: 100%; height: 350px; background: transparent; border: none; color: #d1d5db; resize: none; outline: none; line-height: 1.6; }
+
+        @media (max-width: 1200px) { .container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div id="modal" class="modal-overlay" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div style="font-weight: 700; color: var(--accent); font-size: 1.2rem;">SÜRE AYARI</div>
+        <input type="number" id="mins" value="25" min="1">
+        <div class="btn-group" style="display:flex; gap:10px;">
+            <button class="btn btn-primary" style="width: 100%;" onclick="applySettings()">Güncelle</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <header>
+        <div id="clock">00:00</div>
+        <form class="search-form" action="https://www.google.com/search" method="get">
+            <input type="text" name="q" placeholder="Google'da ara..." autocomplete="off">
+        </form>
+        <div id="date">-- -- ----</div>
+    </header>
+
+    <aside class="sidebar">
+        <div class="card">
+            <div class="pomo-container">
+                <button class="settings-btn" onclick="openModal()">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                </button>
+                <div class="timer-circle">
+                    <svg><circle class="bg-circle" cx="90" cy="90" r="85"></circle><circle id="progress" class="progress-circle" cx="90" cy="90" r="85"></circle></svg>
+                    <div id="timer-display">25:00</div>
+                </div>
+                <div class="btn-group" style="display:flex; justify-content:center; gap:10px;">
+                    <button class="btn btn-primary" id="startBtn" onclick="toggleTimer()">Başlat</button>
+                    <button class="btn btn-secondary" onclick="resetTimer()">Sıfırla</button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main>Haberler Bölümü İçin Ayrıldı</main>
+
+    <div class="right-column">
+        <div class="weather-card">
+            <div id="city-name" style="font-size: 0.8rem; color: var(--dim); margin-bottom: 5px;">ŞEHİR</div>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <span id="weather-icon" style="font-size: 2.2rem;">☀️</span>
+                <span id="current-temp" style="font-size: 2rem; font-weight: 700;">--°C</span>
+            </div>
+            <div id="weather-desc" style="font-size: 0.75rem; color: var(--dim); margin-top: 5px;">Yükleniyor...</div>
+        </div>
+        <div class="note-card">
+            <div style="border-bottom: 1px solid #27272a; padding-bottom: 10px; margin-bottom: 10px; font-weight: 700; color: var(--accent);">📝 NOTLAR</div>
+            <textarea id="noteSaver" placeholder="Buraya yazın..."></textarea>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('clock').textContent = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+        document.getElementById('date').textContent = now.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', weekday: 'long' });
+    }
+    setInterval(updateClock, 1000); updateClock();
+
+    let totalSeconds = 1500, initialSeconds = 1500, timerId = null;
+    const progressCircle = document.getElementById('progress'), circumference = 2 * Math.PI * 85;
+    const modal = document.getElementById('modal');
+    
+    function openModal() { modal.style.display = 'flex'; }
+    function closeModal() { modal.style.display = 'none'; }
+    
+    function applySettings() {
+        const m = document.getElementById('mins').value;
+        if(m > 0) {
+            initialSeconds = m * 60; totalSeconds = initialSeconds;
+            if (timerId) { clearInterval(timerId); timerId = null; document.getElementById('startBtn').textContent = "Başlat"; }
+            updateDisplay(); progressCircle.style.strokeDashoffset = 0; closeModal();
+        }
+    }
+    
+    function updateDisplay() {
+        const m = Math.floor(totalSeconds / 60), s = totalSeconds % 60;
+        document.getElementById('timer-display').textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        progressCircle.style.strokeDashoffset = circumference - (totalSeconds / initialSeconds) * circumference;
+    }
+    
+    function toggleTimer() {
+        const btn = document.getElementById('startBtn');
+        if (timerId) { clearInterval(timerId); timerId = null; btn.textContent = "Devam Et"; }
+        else {
+            btn.textContent = "Durdur";
+            timerId = setInterval(() => { 
+                if (totalSeconds > 0) { totalSeconds--; updateDisplay(); } 
+                else { clearInterval(timerId); timerId = null; btn.textContent = "Başlat"; alert("Süre doldu!"); } 
+            }, 1000);
+        }
+    }
+    
+    function resetTimer() { clearInterval(timerId); timerId = null; totalSeconds = initialSeconds; updateDisplay(); document.getElementById('startBtn').textContent = "Başlat"; }
+
+    async function getWeather() {
+        try {
+            const geo = await (await fetch('https://ipapi.co/json/')).json();
+            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${geo.latitude}&longitude=${geo.longitude}&current_weather=true`);
+            const data = await res.json();
+            const temp = Math.round(data.current_weather.temperature);
+            const code = data.current_weather.weathercode;
+            const hour = new Date().getHours();
+            const isNight = hour >= 19 || hour < 6;
+            document.getElementById('city-name').textContent = geo.city.toUpperCase();
+            document.getElementById('current-temp').textContent = `${temp}°C`;
+            
+            let icon = "☀️", desc = "Açık";
+            if (code === 0) { icon = isNight ? "🌙" : "☀️"; desc = "Açık"; }
+            else if ([1,2,3].includes(code)) { icon = isNight ? "☁️" : "⛅"; desc = "Bulutlu"; }
+            else if ([51,53,55,61,63,65].includes(code)) { icon = "🌧️"; desc = "Yağmurlu"; }
+            else if ([71,73,75,85,86].includes(code)) { icon = "❄️"; desc = "Karlı"; }
+            
+            document.getElementById('weather-icon').textContent = icon;
+            document.getElementById('weather-desc').textContent = desc;
+        } catch (e) { document.getElementById('weather-desc').textContent = "Hata"; }
+    }
+    getWeather();
+
+    const noteArea = document.getElementById('noteSaver');
+    noteArea.value = localStorage.getItem('userNote') || '';
+    noteArea.addEventListener('input', () => localStorage.setItem('userNote', noteArea.value));
+</script>
+
+</body>
+</html>
