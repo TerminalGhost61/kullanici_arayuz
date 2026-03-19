@@ -30,6 +30,21 @@
         .sidebar { display: flex; flex-direction: column; gap: 20px; }
         .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; position: relative; }
         
+        /* Pomodoro Ayar Butonu (SAĞ ÜST) */
+        .pomo-settings-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--dim);
+            cursor: pointer;
+            transition: 0.3s;
+            padding: 5px;
+            z-index: 10;
+        }
+        .pomo-settings-btn:hover { color: var(--accent); transform: rotate(45deg); }
+
         .pomo-container { text-align: center; padding: 10px 0; position: relative; }
         .timer-circle { position: relative; width: 180px; height: 180px; margin: 0 auto 20px; }
         .timer-circle svg { transform: rotate(-90deg); width: 180px; height: 180px; }
@@ -49,18 +64,12 @@
             transition: opacity 0.3s ease;
         }
 
-        /* HABERLER KAPALIYSA */
-        main.news-hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
+        main.news-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
         .news-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 15px; }
         .news-header h2 { margin: 0; font-size: 1.2rem; color: var(--accent); letter-spacing: 1px; }
         
         #news-list { display: flex; flex-direction: column; gap: 12px; flex-grow: 1; }
-        
         .news-item { 
             padding: 15px; 
             border-radius: 12px; 
@@ -74,17 +83,7 @@
             justify-content: center;
         }
         .news-item:hover { background: #27272a80; transform: translateX(8px); }
-        .news-title { 
-            font-size: 0.95rem; 
-            font-weight: 500; 
-            margin-bottom: 8px;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .news-meta { font-size: 0.75rem; color: var(--dim); display: flex; gap: 10px; }
+        .news-title { font-size: 0.95rem; font-weight: 500; margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
         #settings-panel {
             position: fixed; 
@@ -101,62 +100,23 @@
         }
         #settings-panel.open { right: 0; }
         
-        .panel-close { 
-            position: absolute; 
-            top: 20px; 
-            right: 20px; 
-            background: transparent; 
-            border: none; 
-            color: var(--dim); 
-            font-size: 1.2rem; 
-            cursor: pointer; 
-            transition: 0.2s; 
-        }
+        .panel-close { position: absolute; top: 20px; right: 20px; background: transparent; border: none; color: var(--dim); font-size: 1.2rem; cursor: pointer; transition: 0.2s; }
         .panel-close:hover { color: var(--accent); transform: scale(1.1); }
 
         .panel-section { margin-bottom: 30px; }
         .panel-section h3 { font-size: 0.9rem; color: var(--dim); margin-bottom: 15px; text-transform: uppercase; }
         
-        /* Switch Tasarımı */
-        .switch-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #27272a;
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 22px;
-        }
+        .switch-container { display: flex; justify-content: space-between; align-items: center; background: #27272a; padding: 12px; border-radius: 12px; margin-bottom: 20px; }
+        .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #3f3f46; transition: .4s; border-radius: 34px;
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
-            background-color: white; transition: .4s; border-radius: 50%;
-        }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #3f3f46; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--accent); }
         input:checked + .slider:before { transform: translateX(22px); }
 
-        .category-btn { 
-            display: block; width: 100%; text-align: left; padding: 12px; margin-bottom: 8px;
-            background: #27272a; border: 1px solid transparent; color: white; border-radius: 10px; cursor: pointer; transition: 0.2s;
-        }
+        .category-btn { display: block; width: 100%; text-align: left; padding: 12px; margin-bottom: 8px; background: #27272a; border: 1px solid transparent; color: white; border-radius: 10px; cursor: pointer; transition: 0.2s; }
         .category-btn.active { border-color: var(--accent); background: #2dd4bf20; color: var(--accent); }
-        
-        /* Haberler kapalıyken butonların gri olması */
-        .disabled-category {
-            opacity: 0.3;
-            pointer-events: none;
-            filter: grayscale(1);
-        }
+        .disabled-category { opacity: 0.3; pointer-events: none; filter: grayscale(1); }
 
         .right-column { display: flex; flex-direction: column; gap: 20px; }
         .weather-card { background: var(--card); padding: 20px; border-radius: 20px; text-align: center; border: 1px solid var(--border); }
@@ -170,9 +130,12 @@
         .settings-trigger { background: none; border: none; color: var(--dim); cursor: pointer; transition: 0.3s; }
         .settings-trigger:hover { color: var(--accent); transform: rotate(45deg); }
 
+        /* Modal Stilleri */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 1100; justify-content: center; align-items: center; }
-        .modal-content { background: var(--card); padding: 30px; border-radius: 24px; border: 1px solid #3f3f46; text-align: center; width: 280px; }
+        .modal-content { position: relative; background: var(--card); padding: 40px 30px; border-radius: 24px; border: 1px solid #3f3f46; text-align: center; width: 280px; }
         .modal-content input { width: 120px; padding: 15px; border-radius: 12px; border: 1px solid #3f3f46; background: #09090b; color: var(--accent); text-align: center; font-size: 1.8rem; font-weight: 700; margin: 20px 0; outline: none; }
+        .modal-close { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--dim); font-size: 1.2rem; cursor: pointer; }
+        .modal-close:hover { color: #ff4d4d; }
 
         @media (max-width: 1200px) { .container { grid-template-columns: 1fr; } }
     </style>
@@ -181,7 +144,6 @@
 
 <div id="settings-panel">
     <button class="panel-close" onclick="togglePanel(event)">✕</button>
-    
     <div class="panel-section">
         <h3>Genel Görünüm</h3>
         <div class="switch-container">
@@ -192,7 +154,6 @@
             </label>
         </div>
     </div>
-
     <div class="panel-section" id="category-section">
         <h3>Haber Kategorisi</h3>
         <button class="category-btn active" onclick="changeCategory('technology', this)">💻 Teknoloji</button>
@@ -200,15 +161,11 @@
         <button class="category-btn" onclick="changeCategory('space', this)">🚀 Uzay</button>
         <button class="category-btn" onclick="changeCategory('business', this)">📊 Ekonomi</button>
     </div>
-
-    <div class="panel-section">
-        <h3>Süre Ayarları</h3>
-        <button class="category-btn" onclick="openModal()">Pomodoro Süresini Değiştir</button>
-    </div>
 </div>
 
 <div id="modal" class="modal-overlay" onclick="closeModal()">
     <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeModal()">✕</button>
         <div style="font-weight: 700; color: var(--accent); font-size: 1.2rem;">SÜRE AYARI</div>
         <input type="number" id="mins" value="25" min="1">
         <button class="btn btn-primary" style="width: 100%;" onclick="applySettings()">Güncelle</button>
@@ -231,6 +188,10 @@
 
     <aside class="sidebar">
         <div class="card">
+            <button class="pomo-settings-btn" onclick="openModal()" title="Süreyi Ayarla">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7zm7.43-2.52a4.85 4.85 0 0 0 0-1.96l2.11-1.65a.5.5 0 0 0 .12-.64l-2-3.46a.5.5 0 0 0-.61-.22l-2.49 1a4.83 4.83 0 0 0-1.7-1l-.37-2.65A.5.5 0 0 0 14 2h-4a.5.5 0 0 0-.49.42l-.37 2.65a4.83 4.83 0 0 0-1.7 1l-2.49-1a.5.5 0 0 0-.61.22l-2 3.46a.5.5 0 0 0 .12.64l2.11 1.65a4.85 4.85 0 0 0 0 1.96l-2.11 1.65a.5.5 0 0 0-.12.64l2 3.46a.5.5 0 0 0 .61.22l2.49-1a4.83 4.83 0 0 0 1.7 1l.37 2.65a.5.5 0 0 0 .49.42h4a.5.5 0 0 0 .49-.42l.37-2.65a4.83 4.83 0 0 0 1.7-1l2.49 1a.5.5 0 0 0 .61-.22l2-3.46a.5.5 0 0 0-.12-.64l-2.11-1.65z"/></svg>
+            </button>
+
             <div class="pomo-container">
                 <div class="timer-circle">
                     <svg><circle class="bg-circle" cx="90" cy="90" r="85"></circle><circle id="progress" class="progress-circle" cx="90" cy="90" r="85"></circle></svg>
@@ -269,7 +230,7 @@
 </div>
 
 <script>
-    // HABERLERİ AÇIP KAPATMA FONKSİYONU
+    // HABERLERİ AÇIP KAPATMA
     function toggleNewsDisplay() {
         const isChecked = document.getElementById('news-toggle').checked;
         const main = document.getElementById('news-main-container');
@@ -286,15 +247,7 @@
         }
     }
 
-    // Başlangıçta tercihi yükle
-    window.onload = () => {
-        const visible = localStorage.getItem('newsVisible');
-        if (visible === 'false') {
-            document.getElementById('news-toggle').checked = false;
-            toggleNewsDisplay();
-        }
-    };
-
+    // SAAT VE TARİH
     function updateClock() {
         const now = new Date();
         document.getElementById('clock').textContent = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
@@ -302,11 +255,27 @@
     }
     setInterval(updateClock, 1000); updateClock();
 
+    // PANEL VE MODAL YÖNETİMİ
     function togglePanel(event) {
         if (event) event.stopPropagation();
         document.getElementById('settings-panel').classList.toggle('open');
     }
 
+    function openModal() { 
+        document.getElementById('modal').style.display = 'flex';
+        document.getElementById('mins').focus();
+    }
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+    // ESC TUŞU İLE KAPATMA
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") {
+            closeModal();
+            document.getElementById('settings-panel').classList.remove('open');
+        }
+    });
+
+    // DIŞARI TIKLANINCA KAPATMA
     document.addEventListener('click', function(event) {
         const panel = document.getElementById('settings-panel');
         const trigger = document.getElementById('settings-btn');
@@ -315,21 +284,30 @@
         }
     });
 
+    // HABER SİSTEMİ
     let currentCategory = 'technology';
     const categories = {
-        technology: [
-            'https://www.webtekno.com/rss.xml', 
-            'https://shiftdelete.net/feed',
-            'https://www.donanimhaber.com/rss/tum/'
-        ],
-        science: [
-            'https://popsci.com.tr/feed/', 
-            'https://www.bilimteknik.tubitak.gov.tr/rss.xml',
-            'https://evrimagaci.org/rss.xml'
-        ],
-        space: ['https://www.space.com/feeds/all', 'https://www.nasa.gov/news-release/feed/'],
-        business: ['https://www.bloomberght.com/rss', 'https://www.cnbc.com/id/10001147/device/rss/rss.html']
-    };
+    technology: [
+        'https://shiftdelete.net/feed',           // Güncel donanım, yazılım ve mobil haberleri
+        'https://www.donanimhaber.com/rss/tum/',    // Türkiye'nin en köklü teknoloji topluluğu
+        'https://www.log.com.tr/feed/'             // Tasarım ve teknoloji odaklı güncel haberler
+    ],
+    science: [
+        'https://evrimagaci.org/rss.xml',          // Kapsamlı bilimsel makaleler ve evrimsel biyoloji
+        'https://popsci.com.tr/feed/',             // Popüler bilim dünyasından en son gelişmeler
+        'https://fizikist.com/feed/'               // Uzay, fizik ve genel bilim haberleri
+    ],
+   space: [
+        'https://bilimgenc.tubitak.gov.tr/rss.xml',      // TÜBİTAK Bilim Genç (Çok kararlı)
+        'https://www.donanimhaber.com/rss/havacilik-ve-uzay/', // DonanımHaber Uzay Kategorisi
+        'https://fizikist.com/kategori/uzay/feed/'       // Fizikist Uzay Bölümü
+    ],
+    business: [
+        'https://www.bloomberght.com/rss',         // Anlık finans, borsa ve piyasa verileri
+        'https://www.ekonomim.com/rss',            // Günlük ekonomi ve iş dünyası analizleri
+        'https://www.para-borsa.net/feed/'         // Yatırım ve ekonomi odaklı güncel başlıklar
+    ]
+};
 
     async function translateTitle(text) {
         if(/[ğĞçÇşŞüÜöÖıİ]/.test(text)) return text;
@@ -364,23 +342,28 @@
         } catch (e) { status.textContent = "Hata!"; }
     }
 
-    function changeCategory(cat, btn) {
-        currentCategory = cat;
-        document.querySelectorAll('#category-section .category-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('news-category-title').textContent = (cat === 'business' ? 'EKONOMİ' : cat.toUpperCase()) + " HABERLERİ";
-        fetchNews();
-    }
+function changeCategory(cat, btn) {
+    currentCategory = cat;
+    document.querySelectorAll('#category-section .category-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // --- BURASI AYARLIYOR ---
+    let baslik = cat.toUpperCase(); // Varsayılan olarak kelimeyi büyütür (SCIENCE)
+    if(cat === 'science') baslik = 'BİLİM';
+    if(cat === 'space') baslik = 'UZAY';
+    if(cat === 'technology') baslik = 'TEKNOLOJİ';
+    if(cat === 'business') baslik = 'EKONOMİ';
+
+    document.getElementById('news-category-title').textContent = baslik + " HABERLERİ";
+    // ------------------------
     
     fetchNews();
+}
 
-    // Pomodoro ve diğer fonksiyonlar aynı kalıyor...
+    // POMODORO SİSTEMİ
     let totalSeconds = 1500, initialSeconds = 1500, timerId = null;
     const progressCircle = document.getElementById('progress'), circumference = 2 * Math.PI * 85;
-    const modal = document.getElementById('modal');
     
-    function openModal() { modal.style.display = 'flex'; }
-    function closeModal() { modal.style.display = 'none'; }
     function applySettings() {
         const m = document.getElementById('mins').value;
         if(m > 0) {
@@ -402,6 +385,7 @@
     }
     function resetTimer() { clearInterval(timerId); timerId = null; totalSeconds = initialSeconds; updateDisplay(); document.getElementById('startBtn').textContent = "Başlat"; }
 
+    // HAVA DURUMU
     async function getWeather() {
         try {
             const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=41.0082&longitude=28.9784&current_weather=true`);
@@ -410,8 +394,20 @@
             document.getElementById('weather-desc').textContent = "İstanbul";
         } catch (e) { }
     }
-    getWeather();
 
+    // SAYFA YÜKLENİNCE
+    window.onload = () => {
+        const visible = localStorage.getItem('newsVisible');
+        if (visible === 'false') {
+            document.getElementById('news-toggle').checked = false;
+            toggleNewsDisplay();
+        }
+        getWeather();
+        fetchNews();
+        updateDisplay();
+    };
+
+    // NOT KAYDEDİCİ
     const noteArea = document.getElementById('noteSaver');
     noteArea.value = localStorage.getItem('userNote') || '';
     noteArea.addEventListener('input', () => localStorage.setItem('userNote', noteArea.value));
